@@ -161,25 +161,26 @@ exports.handler = async (event) => {
     */
 
     return {
-      statusCode: 200,
-      headers,
+  statusCode: 200,
+  headers,
 
-      body: JSON.stringify({
-        success: true,
+  body: JSON.stringify({
+    success: true,
 
-        payment_id:
-          result.payment_id,
+    payment_id: result.payment_id,
 
-        order_tracking_id:
-          result.order_tracking_id,
+    order_tracking_id:
+      result.order_tracking_id ||
+      result.tracking_id,
 
-        merchant_reference:
-          result.merchant_reference,
+    merchant_reference:
+      result.merchant_reference,
 
-        checkout_url:
-          result.checkout_url
-      })
-    };
+    checkout_url:
+      result.checkout_url ||
+      result.redirect_url
+  })
+};
 
   } catch (error) {
 
