@@ -5,202 +5,621 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Merchant Store</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
-.wrap{max-width:900px;margin:45px auto;padding:20px}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f7fb;
+  color:#172033
+}
+
+.wrap{
+  max-width:900px;
+  margin:45px auto;
+  padding:20px
+}
+
 header{margin-bottom:25px}
-h1{margin:0 0 7px}.muted{color:#667085}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
-.card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 8px 25px #0000000d}
-.product-image{height:130px;background:#eef2f7;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:16px}
-.price{font-size:25px;font-weight:800;margin:12px 0 18px}
-button{border:0;border-radius:10px;padding:13px 17px;font-weight:700;cursor:pointer;font-size:15px}
-.pay{width:100%;background:#2563eb;color:white}
-.pay:disabled{opacity:.6;cursor:not-allowed}
-.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;padding:20px}
-.modal.show{display:flex}.modal-card{background:#fff;border-radius:18px;padding:25px;width:min(420px,100%)}
-.amount{font-size:28px;font-weight:800;margin:12px 0}
-label{display:block;font-size:14px;font-weight:700;margin:18px 0 7px}
-input{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:10px;font-size:16px}
-.msg{margin-top:14px;padding:12px;border-radius:9px;display:none}
-.error{background:#fef2f2;color:#991b1b}.info{background:#eff6ff;color:#1d4ed8}
-.actions{display:flex;gap:10px;margin-top:20px}.actions button{flex:1}
-.close{background:#eef2f7;color:#172033}
+
+h1{
+  margin:0 0 7px
+}
+
+.muted{
+  color:#667085
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:18px
+}
+
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:22px;
+  box-shadow:0 8px 25px #0000000d
+}
+
+.product-image{
+  height:130px;
+  background:#eef2f7;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  margin-bottom:16px
+}
+
+.price{
+  font-size:25px;
+  font-weight:800;
+  margin:12px 0 18px
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:13px 17px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:15px
+}
+
+.pay{
+  width:100%;
+  background:#2563eb;
+  color:white
+}
+
+.pay:disabled{
+  opacity:.6;
+  cursor:not-allowed
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  align-items:center;
+  justify-content:center;
+  padding:20px
+}
+
+.modal.show{
+  display:flex
+}
+
+.modal-card{
+  background:#fff;
+  border-radius:18px;
+  padding:25px;
+  width:min(420px,100%)
+}
+
+.amount{
+  font-size:28px;
+  font-weight:800;
+  margin:12px 0
+}
+
+label{
+  display:block;
+  font-size:14px;
+  font-weight:700;
+  margin:18px 0 7px
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border:1px solid #d0d5dd;
+  border-radius:10px;
+  font-size:16px
+}
+
+.msg{
+  margin-top:14px;
+  padding:12px;
+  border-radius:9px;
+  display:none
+}
+
+.error{
+  background:#fef2f2;
+  color:#991b1b
+}
+
+.info{
+  background:#eff6ff;
+  color:#1d4ed8
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px
+}
+
+.actions button{
+  flex:1
+}
+
+.close{
+  background:#eef2f7;
+  color:#172033
+}
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
+
 <header>
-<h1>Demo Store</h1>
-<p class="muted">Choose a product and pay securely.</p>
+  <h1>Demo Store</h1>
+  <p class="muted">Choose a product and pay securely.</p>
 </header>
+
 <div class="products" id="products"></div>
+
 </div>
+
+
+<!-- PAYMENT POPUP -->
 
 <div class="modal" id="modal">
-<div class="modal-card">
-<h2>Complete Payment</h2>
-<p class="muted" id="modalProduct"></p>
-<div class="amount" id="modalAmount"></div>
 
-<label for="phone">M-Pesa Phone Number</label>
-<input id="phone" type="tel" inputmode="tel" autocomplete="tel"
-placeholder="07XXXXXXXX or 2547XXXXXXXX">
+  <div class="modal-card">
 
-<div class="msg error" id="error"></div>
-<div class="msg info" id="info"></div>
+    <h2>Complete Payment</h2>
 
-<div class="actions">
-<button class="close" id="closePay">Cancel</button>
-<button class="pay" id="payBtn">Continue</button>
+    <p class="muted" id="modalProduct"></p>
+
+    <div class="amount" id="modalAmount"></div>
+
+    <label for="phone">
+      M-Pesa Phone Number
+    </label>
+
+    <input
+      id="phone"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      placeholder="07XXXXXXXX or 2547XXXXXXXX"
+    >
+
+    <div class="msg error" id="error"></div>
+
+    <div class="msg info" id="info"></div>
+
+    <div class="actions">
+
+      <button
+        class="close"
+        id="closePay"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="pay"
+        id="payBtn"
+      >
+        Continue
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
-</div>
-</div>
+
 
 <script>
+
 /*
-  Add/edit products here.
-  The selected product's amount is sent to your merchant backend.
+  PRODUCTS
 */
+
 const PRODUCTS = [
-  { id:"product-001", name:"T-Shirt", amount:800, icon:"👕" },
-  { id:"product-002", name:"Sneakers", amount:2500, icon:"👟" },
-  { id:"product-003", name:"Cap", amount:500, icon:"🧢" },
-  { id:"product-004", name:"Backpack", amount:1800, icon:"🎒" },
-  { id:"product-005", name:"Hoodie", amount:1500, icon:"🧥" },
-  { id:"product-006", name:"Watch", amount:3200, icon:"⌚" }
+
+  {
+    id:"product-001",
+    name:"T-Shirt",
+    amount:800,
+    icon:"👕"
+  },
+
+  {
+    id:"product-002",
+    name:"Sneakers",
+    amount:2500,
+    icon:"👟"
+  },
+
+  {
+    id:"product-003",
+    name:"Cap",
+    amount:500,
+    icon:"🧢"
+  },
+
+  {
+    id:"product-004",
+    name:"Backpack",
+    amount:1800,
+    icon:"🎒"
+  },
+
+  {
+    id:"product-005",
+    name:"Hoodie",
+    amount:1500,
+    icon:"🧥"
+  },
+
+  {
+    id:"product-006",
+    name:"Watch",
+    amount:3200,
+    icon:"⌚"
+  }
+
 ];
 
 const CURRENCY = "KES";
 
-// Keep the merchant API key OUT of this public page.
-// Your merchant backend/proxy should authenticate to the central API.
-const PAYMENT_ENDPOINT = "/api/create-payment";
 
-const productsEl = document.getElementById("products");
-const modal = document.getElementById("modal");
-const modalProduct = document.getElementById("modalProduct");
-const modalAmount = document.getElementById("modalAmount");
-const phone = document.getElementById("phone");
-const error = document.getElementById("error");
-const info = document.getElementById("info");
-const payBtn = document.getElementById("payBtn");
+/*
+  IMPORTANT
+
+  This is the Netlify Function.
+
+  The merchant API key is NOT placed
+  inside this public HTML.
+*/
+
+const PAYMENT_ENDPOINT =
+  "/.netlify/functions/create-payment";
+
+
+const productsEl =
+  document.getElementById("products");
+
+const modal =
+  document.getElementById("modal");
+
+const modalProduct =
+  document.getElementById("modalProduct");
+
+const modalAmount =
+  document.getElementById("modalAmount");
+
+const phone =
+  document.getElementById("phone");
+
+const error =
+  document.getElementById("error");
+
+const info =
+  document.getElementById("info");
+
+const payBtn =
+  document.getElementById("payBtn");
+
 
 let selectedProduct = null;
 
-function money(amount) {
+
+/*
+  MONEY
+*/
+
+function money(amount){
+
   return `${CURRENCY} ${Number(amount).toFixed(2)}`;
+
 }
 
-function renderProducts() {
-  productsEl.innerHTML = PRODUCTS.map(product => `
-    <div class="card">
-      <div class="product-image">${product.icon}</div>
-      <h2>${escapeHtml(product.name)}</h2>
-      <div class="price">${money(product.amount)}</div>
-      <button class="pay" onclick="openPayment('${product.id}')">
-        Pay Now
-      </button>
-    </div>
-  `).join("");
+
+/*
+  DISPLAY PRODUCTS
+*/
+
+function renderProducts(){
+
+  productsEl.innerHTML =
+    PRODUCTS.map(product => `
+
+      <div class="card">
+
+        <div class="product-image">
+          ${product.icon}
+        </div>
+
+        <h2>
+          ${escapeHtml(product.name)}
+        </h2>
+
+        <div class="price">
+          ${money(product.amount)}
+        </div>
+
+        <button
+          class="pay"
+          onclick="openPayment('${product.id}')"
+        >
+          Pay Now
+        </button>
+
+      </div>
+
+    `).join("");
+
 }
 
-function escapeHtml(text) {
-  return String(text).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[c]));
+
+/*
+  HTML ESCAPE
+*/
+
+function escapeHtml(text){
+
+  return String(text).replace(
+    /[&<>"']/g,
+    c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[c])
+  );
+
 }
 
-window.openPayment = function(productId) {
-  selectedProduct = PRODUCTS.find(p => p.id === productId);
 
-  if (!selectedProduct) return;
+/*
+  OPEN PAYMENT POPUP
+*/
 
-  modalProduct.textContent = selectedProduct.name;
-  modalAmount.textContent = money(selectedProduct.amount);
+window.openPayment = function(productId){
+
+  selectedProduct =
+    PRODUCTS.find(
+      p => p.id === productId
+    );
+
+  if(!selectedProduct){
+    return;
+  }
+
+  modalProduct.textContent =
+    selectedProduct.name;
+
+  modalAmount.textContent =
+    money(selectedProduct.amount);
+
   phone.value = "";
+
   error.style.display = "none";
   info.style.display = "none";
+
   payBtn.disabled = false;
   payBtn.textContent = "Continue";
 
   modal.classList.add("show");
+
   phone.focus();
+
 };
 
-document.getElementById("closePay").onclick = () => {
-  modal.classList.remove("show");
-};
 
-function normalizePhone(value) {
-  let p = value.replace(/\s+/g, "").replace(/-/g, "");
-  if (p.startsWith("+")) p = p.slice(1);
-  if (p.startsWith("07")) p = "254" + p.slice(1);
-  if (p.startsWith("01")) p = "254" + p.slice(1);
+/*
+  CLOSE POPUP
+*/
+
+document
+  .getElementById("closePay")
+  .onclick = () => {
+
+    modal.classList.remove("show");
+
+  };
+
+
+/*
+  PHONE NORMALIZATION
+*/
+
+function normalizePhone(value){
+
+  let p =
+    value
+      .replace(/\s+/g,"")
+      .replace(/-/g,"");
+
+  if(p.startsWith("+")){
+    p = p.slice(1);
+  }
+
+  if(p.startsWith("07")){
+    p = "254" + p.slice(1);
+  }
+
+  if(p.startsWith("01")){
+    p = "254" + p.slice(1);
+  }
+
   return p;
+
 }
 
-function validPhone(p) {
+
+/*
+  PHONE VALIDATION
+*/
+
+function validPhone(p){
+
   return /^254(7|1)\d{8}$/.test(p);
+
 }
+
+
+/*
+  START PAYMENT
+*/
 
 payBtn.onclick = async () => {
+
   error.style.display = "none";
   info.style.display = "none";
 
-  if (!selectedProduct) return;
-
-  const customerPhone = normalizePhone(phone.value);
-
-  if (!validPhone(customerPhone)) {
-    error.textContent = "Enter a valid Kenyan phone number, e.g. 0712345678.";
-    error.style.display = "block";
+  if(!selectedProduct){
     return;
   }
 
+  const customerPhone =
+    normalizePhone(phone.value);
+
+
+  if(!validPhone(customerPhone)){
+
+    error.textContent =
+      "Enter a valid Kenyan phone number, e.g. 0712345678.";
+
+    error.style.display = "block";
+
+    return;
+  }
+
+
   payBtn.disabled = true;
-  payBtn.textContent = "Starting payment...";
 
-  try {
-    const response = await fetch(PAYMENT_ENDPOINT, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        order_id: selectedProduct.id + "-" + Date.now(),
-        product_id: selectedProduct.id,
-        product_name: selectedProduct.name,
-        amount: selectedProduct.amount,
-        currency: CURRENCY,
-        customer_phone: customerPhone,
-        description: selectedProduct.name
-      })
-    });
+  payBtn.textContent =
+    "Starting payment...";
 
-    const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.error || "Payment could not be started.");
+  try{
+
+    const response =
+      await fetch(
+        PAYMENT_ENDPOINT,
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json"
+          },
+
+          body:JSON.stringify({
+
+            order_id:
+              selectedProduct.id +
+              "-" +
+              Date.now(),
+
+            product_id:
+              selectedProduct.id,
+
+            product_name:
+              selectedProduct.name,
+
+            amount:
+              selectedProduct.amount,
+
+            currency:
+              CURRENCY,
+
+            customer_phone:
+              customerPhone,
+
+            customer_name:"",
+            customer_email:"",
+
+            description:
+              selectedProduct.name
+
+          })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if(!response.ok){
+
+      throw new Error(
+        result.error ||
+        "Payment could not be started."
+      );
+
     }
 
-    if (!result.checkout_url) {
-      throw new Error("No checkout URL was returned.");
+
+    if(!result.checkout_url){
+
+      throw new Error(
+        "No checkout URL was returned."
+      );
+
     }
 
-    info.textContent = "Opening secure payment checkout...";
+
+    info.textContent =
+      "Opening secure payment checkout...";
+
     info.style.display = "block";
 
-    window.location.href = result.checkout_url;
 
-  } catch (e) {
-    error.textContent = e.message || "Payment could not be started.";
-    error.style.display = "block";
+    /*
+      SEND CUSTOMER TO PESAPAL
+    */
+
+    window.location.href =
+      result.checkout_url;
+
+
+  }catch(e){
+
+    console.error(e);
+
+    error.textContent =
+      e.message ||
+      "Payment could not be started.";
+
+    error.style.display =
+      "block";
+
     payBtn.disabled = false;
-    payBtn.textContent = "Continue";
+
+    payBtn.textContent =
+      "Continue";
+
   }
+
 };
 
+
+/*
+  START
+*/
+
 renderProducts();
+
 </script>
+
 </body>
 </html>
