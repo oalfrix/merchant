@@ -555,7 +555,10 @@ payBtn.onclick = async () => {
 
 
     const result =
-      await response.json();
+  await response.json();
+
+console.log("HTTP STATUS:", response.status);
+console.log("PAYMENT API RESPONSE:", result);
 
 
     if(!response.ok){
